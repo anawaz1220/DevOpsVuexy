@@ -196,109 +196,7 @@
       v-model="addTruckInfo"
       max-width="550px"
     >
-      <VCard class="px-5 py-5">
-        <div class="d-flex justify-space-between mb-3">
-          <VCardTitle> EDIT TRUCK INFO </VCardTitle>
-          <VAvatar rounded="lg"><VIcon
-            icon="tabler-x"
-            color="error"
-            @click="closeTruckInfo"
-          /></VAvatar>
-        </div>
-        <hr>
-        <AppSelect
-          v-model="addTruckClient"
-          class="mt-3"
-          :items="getClients"
-          label="SELECT CLIENT*"
-          placeholder="The Renovator"
-          item-title="name"
-          item-value="id"
-          return-object
-        :rules="[requiredValidator]"
-
-        />
-        <!-- plate num and company -->
-        <div class="d-flex justify-space-between gap-3 flex-wrap mt-3">
-          <AppTextField
-            v-model="truckPlateNo"
-            label=" PLATE NUM*"
-            placeholder=" plate num"
-        :rules="[requiredValidator]"
-
-          />
-          <AppTextField
-            v-model="truckCompany"
-            label="COMPANY*"
-            placeholder="company"
-        :rules="[requiredValidator]"
-
-          />
-        </div>
-        <!-- model  and color -->
-        <div class="d-flex justify-space-between gap-3 flex-wrap mt-3">
-          <AppTextField
-            v-model="truckModel"
-            label=" MODEL*"
-            placeholder=" model"
-        :rules="[requiredValidator]"
-
-          />
-          <AppTextField
-            v-model="truckColor"
-            label="COLOR"
-            placeholder="color"
-
-          />
-        </div>
-        <!-- Tare weight  and vin num -->
-        <div class="d-flex justify-space-between gap-3 flex-wrap mt-3">
-          <AppTextField
-            v-model="truckWeight"
-            label=" TARE WEIGHT*"
-            placeholder="0"
-        :rules="[requiredValidator]"
-
-          />
-          <AppTextField
-            v-model="truckVin"
-            label="VIN NUM"
-            placeholder="vin num"
-          />
-        </div>
-        <div class="d-flex justify-space-between gap-3 flex-wrap mt-3">
-          <AppTextField
-            v-model="truckUnit"
-            label="UNIT"
-            placeholder="unit"
-          />
-          <AppTextField
-            v-model="truckDescription"
-            label="DESCRIPTION"
-            placeholder="Truck Description"
-          />
-        </div>
-        <div class="d-flex justify-end mt-4">
-          <VCardActions>
-            <VSpacer />
-            <VBtn
-              color="error"
-              variant="outlined"
-              @click="closeTruckInfo"
-            >
-              close
-            </VBtn>
-            <VBtn
-              color="primary"
-              variant="elevated"
-              @click="saveTruckinfo(addTruckClient, truckPlateNo, truckCompany, truckModel, truckColor, truckWeight, truckVin, truckUnit, truckDescription)"
-            >
-              submit
-            </VBtn>
-            <VSpacer />
-          </VCardActions>
-        </div>
-      </VCard>
+   <FormFleet @closeDialog="addTruckInfo=false"  />
     </VDialog>
     <!-- 👉 ADD  TRUCK  INFO DIALOG  -->
     <VDialog
@@ -348,7 +246,7 @@
   </span>
   <!-- truck details -->
   <v-dialog v-model="openTruckDetailsDialog" width="900">
-    <DialogCloseBtn @click="openTruckDetails" />
+    <DialogCloseBtn @click="openTruckDetailsDialog=false" />
     <v-card>
       <v-card-text>
        <VDataTable :headers="header" :items="getData"></VDataTable>
@@ -358,10 +256,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
+import FormFleet from '@/components/form/Fleet.vue';
 import { useClientStore } from "@/store/client";
 import { useTruckStore } from "@/store/truck";
+import { ref } from 'vue';
 import { VDataTable } from "vuetify/labs/VDataTable";
 const currentPage = ref(1)
 const truckPlateNo = ref(null)
@@ -383,22 +281,8 @@ const truckAssignment = ref(false)
 const openAssignment = () => {
   truckAssignment.value = true
 }
-// get update data for truck
-const updateData = computed(() =>{
-  return tStore.TruckUpdate;
-})
-// get prefilled form
-watch(getUpdated, updateData)
-function getUpdated(){
-truckPlateNo.value = updateData.value?.plate_no;
-truckCompany.value =updateData.value?.company;
-truckModel.value = updateData.value?.model;
-truckColor.value = updateData.value?.color;
-truckWeight.value =updateData.value?.tare_weight;
-truckVin.value = updateData.value?.vin_no;
-truckUnit.value = updateData.value?.unit;
-truckDescription.value = updateData.value?.description
-}
+
+
 const getData = computed(() => {
   const objectData = tStore.truckDetailsById;
   return [objectData];
@@ -418,6 +302,7 @@ const getTrucks = computed(() => {
   // console.log(tStore.AllTrucks, 'trucks');
   return tStore.AllTrucks
 })
+
 const selectedTruck = ref(getTrucks[0])
 const getClientTrucks = computed(() => {
   console.log(tStore.truckBYclient, 'from client');
@@ -438,7 +323,6 @@ const getClients = computed(() => {
 })
 const selectedclient = ref(getClients[0])
 const newclient = ref(getClients[1])
-const addTruckClient = ref(getClients[1])
 // prefilled update data
 // function getUpdateData(){
   
@@ -455,10 +339,6 @@ const openTruckInfo = (item) => {
     const emptyData =ref(null)
     return tStore.saveTruckData(emptyData.value);
   }
-}
-
-const closeTruckInfo = () => {
-  addTruckInfo.value = false
 }
 
 
@@ -584,9 +464,7 @@ async function assignTruck(client, truck) {
   selectedclient.value = null
   newclient.value = null
 }
-async function deleteItemConfirm() {
-  console.log('log from delete')
-}
+
 async function selectTruckByclient(newValue) {
   console.log('Selected Client changed:', newValue.id)
   await tStore.FetchTruckByClient(newValue.id)
@@ -595,45 +473,7 @@ async function selectTruckByclient(newValue) {
   // For example, you can call another function here
   // myCustomFunction(newValue);
 }
-// edit truck
-async function saveTruckinfo(addTruckClient, truckPlateNo, truckCompany, truckModel, truckColor, truckWeight, truckVin, truckUnit, truckDescription) {
-  truckWeight = parseFloat(truckWeight)
-if(updateData.value?.id){
-  const payload = {
-    // client_id: addTruckClient.id,
-    plate_no: truckPlateNo,
-    model: truckModel,
-    color: truckColor,
-    company: truckCompany,
-    vin_no: truckVin,
-    tare_weight: truckWeight,
-    unit: truckUnit,
-    description: truckDescription,
-  }
 
-  addTruckInfo.value = false
-
-  // console.log(payload, 'before request');
-  await tStore.updateTruck(payload,updateData.value?.id)
-}else{
-  const payload = {
-    client_id: addTruckClient.id,
-    plate_no: truckPlateNo,
-    model: truckModel,
-    color: truckColor,
-    company: truckCompany,
-    vin_no: truckVin,
-    tare_weight: truckWeight,
-    unit: truckUnit,
-    description: truckDescription,
-  }
-
-  addTruckInfo.value = false
-
-  // console.log(payload, 'before request');
-  await tStore.FetchAddNewTruck(payload)
-}
-}
 function importTrucks(event) {
   truckFile.value = event.target.files[0]
 }

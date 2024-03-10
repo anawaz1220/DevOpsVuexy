@@ -30,11 +30,13 @@ export const useClientStore = defineStore('clients', {
     allClients: [],
     clientsDetails: [],
     authToken: null,
+    clientSummary:null
   }),
   actions: {
     async setup() {
       await this.initializeToken();
     },
+
     async initializeToken() {
       if (process.client) { // Check if running in the browser environment
         const token = localStorage.getItem(TOKEN_KEY);
@@ -43,12 +45,14 @@ export const useClientStore = defineStore('clients', {
         }
       }
     },
+
     async fetchAllClients() {
       await this.initializeToken(); // Ensure token initialization is complete
       try {
         const headers = {
           Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
         };
+
         console.log("headers", headers);
         this.LoadingData = true;
         const res = await axios.get(baseurl + `api/v1/clients`, { headers });
@@ -99,5 +103,18 @@ export const useClientStore = defineStore('clients', {
         this.clientLoading =false;
       }
     },
+    async getClientSummary(clientId){
+      this.initializeToken()
+      try{
+          const headers = {
+          Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
+        };
+        const res=await axios.get(baseurl+`api/v1/clients/${clientId}`,{headers})
+        this.clientSummary=res?.data
+      }
+      catch(error){
+        console.log("error in retrieving cilent details",error)
+      }
+    }
   },
 });

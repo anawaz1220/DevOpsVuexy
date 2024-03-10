@@ -71,10 +71,10 @@
             <VMenu activator="parent" >
               <VList  class="v-tabs-pill">
                 <VListItem >
-                  <VListItemTitle style="font-weight: 600; cursor: pointer;" @click="pushToweekly(item.id)"  ><v-icon icon="tabler-file-dots" class="me-2"></v-icon >Client Summary</VListItemTitle>
+                  <VListItemTitle style="font-weight: 600; cursor: pointer;" @click="fnShowClientSummary(item.id)"><v-icon icon="tabler-file-dots" class="me-2"></v-icon >Client Summary</VListItemTitle>
                 </VListItem>
                 <VListItem link>
-                  <VListItemTitle @click="openAssignPermission" style="font-weight: 600;" ><v-icon icon="tabler-file-dots" class="me-2"></v-icon>Weekly Invoice</VListItemTitle>
+                  <VListItemTitle  style="font-weight: 600;" ><v-icon icon="tabler-file-dots" class="me-2"></v-icon>Weekly Invoice</VListItemTitle>
                 </VListItem>
               </VList>
             </VMenu>
@@ -170,7 +170,7 @@
         <VBtn color="error" variant="outlined" @click="closeDialog">
           close
         </VBtn>
-        <VBtn color="primary" variant="elevated" @click="deleteItemConfirm">
+        <VBtn color="primary" variant="elevated">
           submit
         </VBtn>
         <VSpacer />
@@ -217,24 +217,37 @@
     </v-card-text>
   </v-card>
  </v-dialog>
+
+ <VDialog v-model="showClientSummary" max-width="650px">
+   <VCard class="px-5 py-5">
+    <ClientSummary  :clientId="selectClientForDetailsId"/>
+  </VCard>
+</VDialog>
+
+
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useClientStore } from '@/store/client';
 import { useRouter } from "vue-router";
 import { VDataTable } from 'vuetify/labs/VDataTable';
+import ClientSummary from "../../components/client/Summary.vue";
+
 const router = useRouter()
 const refForm =ref()
 const clientStore = useClientStore();
 const isDialogVisible = ref(false)
 const search = ref('')
 const file = ref("")
+const showClientSummary=ref(false)
+const selectClientForDetailsId=ref<string|null>(null)
 const clientData = computed(()=>{
  return clientStore.allClients;
 })
 const AllClients = async () =>{
   await clientStore.fetchAllClients();
 }
+
 AllClients()
 
 
@@ -255,13 +268,14 @@ const closeDialog = () =>{
   importClient.value = false;
 }
 // router push function
-const pushToweekly = (id) => {
-  console.log("id", id);
-  router.push({
-    path: '/weeklyinvoice',
-    query: { id: id }
-  });
-}
+// const pushToweekly = (id) => {
+//   console.log("id", id);
+//   router.push({
+//     path: '/weeklyinvoice',
+//     query: { id: id }
+//   });
+// }
+
 const options = ref({ page: 1, itemsPerPage: 5, sortBy: [''], sortDesc: [false] })
 // paginatioin
 // const currentPage = ref(1);
@@ -295,7 +309,7 @@ const headers = [
   },
 ];
 // client details dialog
-function toggleClientDialog(item){
+function toggleClientDialog(item:any){
   isDialogVisible.value = !isDialogVisible.value;
   clientStore.fetchClientsDetails(item?.id)
 }
@@ -317,7 +331,7 @@ const BreadcrumbsData = [
 ];
 
 
-function onFileSelected(event) {
+function onFileSelected(event:any) {
   const f= event.target.files[0];
   file.value =f;
 }
@@ -335,6 +349,11 @@ if (refForm?.value?.errors?.length) {
 };
 infoDialog.value = false;
 AllClients()
+}
+
+function fnShowClientSummary(clientId:string){
+  showClientSummary.value=true
+  selectClientForDetailsId.value=clientId
 }
 </script>
 
