@@ -19,6 +19,13 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 ## Project Setup
 
 ```sh
+npm version: 10.4.0
+```
+```sh
+node version: v18.17.1
+```
+
+```sh
 npm install
 ```
 
