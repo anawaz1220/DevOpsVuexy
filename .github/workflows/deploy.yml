@@ -1,0 +1,113 @@
+name: "CI"
+on:
+  push:
+    branches:
+      - master
+      - staging
+      - production
+  # pull_request:
+  #   branches:
+  #     - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      AWS_S3_BUCKET_KEY: ${{ secrets.AWS_S3_BUCKET_KEY }}
+      IMAGE_TAG: ${{github.sha}}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+      - run: |
+          npm install
+          npm run generate
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # create and enable S3 bucket manually and upload the dist folder contents
+      - name: Upload static files to dev S3 bucket
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: |
+          aws s3 sync dist/ s3://web-ezzton.dev.efaci-saas.net/
+      - name: Upload static files to staging S3 bucket
+        if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
+        run: |
+          aws s3 sync dist/ s3://web-ezzton.staging.efaci-saas.net
+
+      - name: Upload static files to production S3 bucket
+        if: github.ref == 'refs/heads/production' && github.event_name == 'push'
+        run: |
+          aws s3 sync dist/ s3://web-ezzton.production.efaci-saas.net
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.3.3"
+
+      - name: Terraform fmt
+        id: fmt
+        run: |
+          cd deploy/
+          terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        env:
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
+        run: |
+          cd deploy/
+          terraform init -backend-config="bucket=${AWS_S3_BUCKET}" -backend-config="key=${AWS_S3_BUCKET_KEY}" -backend-config="region=${AWS_REGION}"
+
+      - name: Terraform Validate
+        id: validate
+        run: |
+          cd deploy/
+          terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          cd deploy/
+          terraform workspace select dev || terraform workspace new dev
+          terraform plan -no-color
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform Deploy Dev
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: |
+          cd deploy/
+          terraform workspace select dev || terraform workspace new dev
+          terraform apply -auto-approve -input=false
+
+      - name: Terraform Deploy Staging
+        if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
+        run: |
+          cd deploy/
+          terraform workspace select staging || terraform workspace new staging
+          terraform apply -auto-approve -input=false
+
+      - name: Terraform Deploy Prod
+        if: github.ref == 'refs/heads/production' && github.event_name == 'push'
+        run: |
+          cd deploy/
+          terraform workspace select production || terraform workspace new production
+          terraform apply -auto-approve -input=false
