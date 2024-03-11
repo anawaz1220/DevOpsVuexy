@@ -21,8 +21,8 @@
     <div class="d-flex justify-space-between flex-wrap py-5">
       <h3>ALL CLIENTS</h3>
       <div class="d-flex gap-3 flex-wrap">
-        <VBtn class="add-client" @click=" openDialog">ADD CLIENT</VBtn>
-        <VBtn @click="openinfoDialog">IMPORT CLIENT</VBtn>
+        <InputBtn class="add-client" @click=" openDialog" :requiredPermission="'add_client'">ADD CLIENT</InputBtn>
+        <InputBtn @click="openinfoDialog" :requiredPermission="'add_client'">IMPORT CLIENT</InputBtn>
       </div>
     </div>
     <div class="d-flex justify-end flex-wrap">
@@ -69,13 +69,9 @@
               icon="tabler-dots-vertical"
             />
             <VMenu activator="parent" >
-              <VList  class="v-tabs-pill">
-                <VListItem >
-                  <VListItemTitle style="font-weight: 600; cursor: pointer;" @click="fnShowClientSummary(item.id)"><v-icon icon="tabler-file-dots" class="me-2"></v-icon >Client Summary</VListItemTitle>
-                </VListItem>
-                <VListItem link>
-                  <VListItemTitle  style="font-weight: 600;" ><v-icon icon="tabler-file-dots" class="me-2"></v-icon>Weekly Invoice</VListItemTitle>
-                </VListItem>
+              <VList  class="py-2">
+                  <InputBtn :variant="'plain'" :requiredPermission="'view_summary'" :color="'primary'" block class="mb-2"  @click="fnShowClientSummary(item.id)"><v-icon icon="tabler-file-dots" class="me-2"></v-icon >Client Summary</InputBtn>                
+                  <InputBtn :variant="'plain'" :requiredPermission="'generate_weekly_invoices'" :color="'primary'" block ><v-icon icon="tabler-file-dots" class="me-2"></v-icon>Weekly Invoice</InputBtn>
               </VList>
             </VMenu>
           </VBtn>
@@ -167,12 +163,12 @@
     <div class="d-flex justify-end mt-4">
       <VCardActions>
         <VSpacer />
-        <VBtn color="error" variant="outlined" @click="closeDialog">
+        <InputBtn  :color="'error'" :variant="'outlined'" @click="closeDialog">
           close
-        </VBtn>
-        <VBtn color="primary" variant="elevated">
+        </InputBtn>
+        <InputBtn  :variant="'elevated'">
           submit
-        </VBtn>
+        </InputBtn>
         <VSpacer />
       </VCardActions>
     </div>
@@ -194,12 +190,12 @@
 
         <VSpacer />
         <div class="d-flex gap-3">
-          <VBtn color="error" variant="outlined" @click="closeinfoDialog">
+          <InputBtn  :color="'error'" :variant="'outlined'" @click="closeinfoDialog">
             close
-          </VBtn>
-          <VBtn color="primary" type="submit" variant="elevated" :disabled="clientStore.clientLoading" :loading="clientStore.clientLoading">
+          </InputBtn>
+          <InputBtn   type="submit" :variant="'elevated'" :disabled="clientStore.clientLoading" :loading="clientStore.clientLoading">
             submit
-          </VBtn>
+          </InputBtn>
         </div>
       </div>
     </VForm>
@@ -228,12 +224,10 @@
 </template>
 
 <script setup lang="ts">
+import InputBtn from "@/components/Input/Btn.vue";
 import { useClientStore } from '@/store/client';
-import { useRouter } from "vue-router";
 import { VDataTable } from 'vuetify/labs/VDataTable';
 import ClientSummary from "../../components/client/Summary.vue";
-
-const router = useRouter()
 const refForm =ref()
 const clientStore = useClientStore();
 const isDialogVisible = ref(false)
@@ -267,14 +261,7 @@ const openDialog = () =>{
 const closeDialog = () =>{
   importClient.value = false;
 }
-// router push function
-// const pushToweekly = (id) => {
-//   console.log("id", id);
-//   router.push({
-//     path: '/weeklyinvoice',
-//     query: { id: id }
-//   });
-// }
+
 
 const options = ref({ page: 1, itemsPerPage: 5, sortBy: [''], sortDesc: [false] })
 // paginatioin

@@ -1,4 +1,3 @@
-import baseurl from "@/@core/app-config/baseUrl";
 import axios from "axios";
 import { defineStore } from "pinia";
 import swal from "sweetalert2";
@@ -48,7 +47,7 @@ export const useMaterialsStore = defineStore('materials', {
                 const headers = {
                     Authorization: `Bearer ${this.authToken}`,
                 };
-                const res =await axios.get(baseurl + `api/v1/materials`, { headers });
+                const res =await axios.get(`/materials`, { headers });
                 if(res?.status==200){
                     this.LoadingData=false;
                     this.allMaterials =res?.data;
@@ -65,7 +64,7 @@ export const useMaterialsStore = defineStore('materials', {
                 const headers = {
                     Authorization: `Bearer ${this.authToken}`,
                 };
-                const res= await axios.put(baseurl + `api/v1/materials/board-rate`,payload, { headers });
+                const res= await axios.put(`/materials/board-rate`,payload, { headers });
                 if(res?.status==201){
                     this.addingLoad=false;
                     successAlert("Material Added");
@@ -85,7 +84,7 @@ export const useMaterialsStore = defineStore('materials', {
                     Authorization: `Bearer ${this.authToken}`,
                 };
                 console.log(payload, 'before request-js');
-                const res= await axios.post(baseurl + `api/v1/materials`,payload, { headers });
+                const res= await axios.post(`/materials`,payload, { headers });
                 if(res?.status==201){
                     this.addingLoad=false;
                     successAlert("New material added ");
@@ -103,7 +102,7 @@ export const useMaterialsStore = defineStore('materials', {
                     const headers = {
                         Authorization: `Bearer ${this.authToken}`,
                     };
-                    const res= await axios.put(baseurl + `api/v1/materials/client-rate`,payload, { headers });
+                    const res= await axios.put(`/materials/client-rate`,payload, { headers });
                     if(res?.status==201||res.status==200){
                         this.addingLoad=false;
                         successAlert("client rate Added");
@@ -123,7 +122,7 @@ export const useMaterialsStore = defineStore('materials', {
                     const headers = {
                         Authorization: `Bearer ${this.authToken}`,
                     };
-                    const res= await axios.put(baseurl + `api/v1/materials/board-rate`,payload, { headers });
+                    const res= await axios.put(`/materials/board-rate`,payload, { headers });
                     if(res?.status==201||res.status==200){
                         this.addingLoad=false;
                         successAlert("Board rate Added");

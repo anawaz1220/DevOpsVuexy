@@ -21,7 +21,7 @@
       <VCard>
         <v-card-text>
           <div class=" py-5 d-flex justify-end ">
-            <v-btn @click="openAddMaterialDialog">ADD MATERIAL</v-btn>
+            <InputBtn :requiredPermission="'add_material'" @click="openAddMaterialDialog">ADD MATERIAL</InputBtn>
           </div>
           <div class="d-flex justify-end flex-wrap ">
             <span class="search">
@@ -56,26 +56,33 @@
               icon="tabler-dots-vertical"
             />
             <VMenu activator="parent" >
-              <VList  class="v-tabs-pill">
-                <VListItem 
-                @click="openEditDialog(item)" 
-                >
-                  <VListItemTitle 
-                  style="font-weight: 600; cursor: pointer;" 
-                  >
-                  <v-icon 
+                 <VList  class="py-2">
+                  <InputBtn   
+                  :variant="'plain'"
+                   :requiredPermission="'add_board_rate'"
+                    :color="'primary'"
+                     block
+                      class="mb-2" 
+                        @click="openEditDialog(item)" >
+                        <v-icon 
                   icon="tabler-file-dots"
                    class="me-2"
-                   >
-                  </v-icon >
+                  />
+                  
                   Add board rate
-                </VListItemTitle>
-                </VListItem>
-
-                <VListItem link>
-                  <VListItemTitle  @click="ShowAddClientRate=true,selectedMaterialId=item.id" style="font-weight: 600;" ><v-icon icon="tabler-file-dots" class="me-2"></v-icon>Add client rate</VListItemTitle>
-                </VListItem>
+                  </InputBtn>                
+                  <InputBtn   
+                  :variant="'plain'"
+                   :requiredPermission="'add_client_rate'"
+                    :color="'primary'"
+                      block 
+                       @click="ShowAddClientRate=true,selectedMaterialId=item.id"
+                      >
+                  <v-icon icon="tabler-file-dots" class="me-2"/>
+                  Add client rate
+                  </InputBtn>
               </VList>
+               
             </VMenu>
           </VBtn>
           
@@ -116,7 +123,7 @@
         <VCard>
           <v-card-text>
           <div class="d-flex justify-space-between mb-3">
-              <h4 class="mt-1">ADD MATERIALS</h4>
+              <h4 class="mt-1">ADD BOARD RATE</h4>
              <v-avatar size="25" ><VIcon icon="tabler-x" color="error" @click="closeEditDialog"></VIcon></v-avatar>
           </div>
           <hr>
@@ -255,10 +262,10 @@
     </span>
 </template>
 <script setup>
+import InputBtn from "@/components/Input/Btn.vue";
 import { useMaterialsStore } from "@/store/material";
 import { VDataTable } from 'vuetify/labs/VDataTable';
 import FormMaterialClientRate from "../../components/form/MaterialClientRate.vue";
-
 const name = ref("")
 const materialId = ref("");
 const boardRate = ref("")

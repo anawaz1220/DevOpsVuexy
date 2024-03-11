@@ -1,4 +1,3 @@
-import baseurl from "@/@core/app-config/baseUrl"
 import axios from "axios"
 import { defineStore } from "pinia"
 import swal from "sweetalert2"
@@ -52,7 +51,7 @@ export const useAccountStore = defineStore("account", {
           Authorization: `Bearer ${this.authToken}`,
         }
 
-        const res = await axios.get(baseurl + "api/v1/accounts", { headers })
+        const res = await axios.get("/accounts", { headers })
         if (res?.status == 200) {
           this.allAccounts = res?.data
           this.loadingData = false
@@ -72,7 +71,7 @@ export const useAccountStore = defineStore("account", {
           Authorization: `Bearer ${this.authToken}`,
         }
 
-        const res = await axios.post(baseurl + "api/v1/accounts", payload, {
+        const res = await axios.post("/accounts", payload, {
           headers,
         })
 
@@ -94,7 +93,7 @@ export const useAccountStore = defineStore("account", {
           Authorization: `Bearer ${this.authToken}`,
         }
 
-        const res = await axios.patch(baseurl + `api/v1/accounts/${id}`,{
+        const res = await axios.patch(`/accounts/${id}`,{
           headers,
         })
 
@@ -117,7 +116,7 @@ export const useAccountStore = defineStore("account", {
           Authorization: `Bearer ${this.authToken}`,
         }
 
-        const res = await axios.get(baseurl + `api/v1/accounts/${id}`, {
+        const res = await axios.get(`/accounts/${id}`, {
           headers,
         })
 
@@ -140,7 +139,7 @@ export const useAccountStore = defineStore("account", {
           Authorization: `Bearer ${this.authToken}`,
         }
 
-        const res = await axios.patch(baseurl + `api/v1/accounts/${id}`, null, {
+        const res = await axios.patch(`/accounts/${id}`, null, {
           headers,
         })
 
@@ -163,8 +162,7 @@ export const useAccountStore = defineStore("account", {
           Authorization: `Bearer ${this.authToken}`,
         }
 
-        const res = await axios.get(
-          baseurl + `api/v1/accounts/by-client/${id}`,
+        const res = await axios.get(`/accounts/by-client/${id}`,
           { headers },
         )
 
@@ -190,8 +188,7 @@ export const useAccountStore = defineStore("account", {
           "Content-Type": "multipart/form-data",
         }
 
-        const res = await axios.post(
-          baseurl + "api/v1/imports/account-data",
+        const res = await axios.post("/imports/account-data",
           formData,
           { headers },
         )

@@ -1,6 +1,5 @@
 <script setup>
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import { VNodeRenderer } from './VNodeRenderer'
+import { useLoginStore } from '@/store/login'
 import { layoutConfig } from '@layouts'
 import {
   VerticalNavGroup,
@@ -9,6 +8,9 @@ import {
 } from '@layouts/components'
 import { useLayoutConfigStore } from '@layouts/stores/config'
 import { injectionKeyIsVerticalNavHovered } from '@layouts/symbols'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { VNodeRenderer } from './VNodeRenderer'
+
 
 const props = defineProps({
   tag: {
@@ -28,6 +30,11 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+})
+
+const loginStore=useLoginStore()
+const permissions=computed(()=>{
+  return loginStore.permissions
 })
 
 const refNav = ref()
@@ -60,6 +67,15 @@ const updateIsVerticalNavScrolled = val => isVerticalNavScrolled.value = val
 
 const handleNavScroll = evt => {
   isVerticalNavScrolled.value = evt.target.scrollTop > 0
+}
+
+function isAllowed(item){
+    if(!!!item.requiredPermission) return true
+
+  else if(Array.isArray(item.requiredPermission))
+  return permissions.value?.some(permission=> item.requiredPermission.includes(permission))
+  
+  else if(permissions.value?.includes(item.requiredPermission)) return true
 }
 
 const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
@@ -116,10 +132,10 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
           @click="configStore.isVerticalNavCollapsed = !configStore.isVerticalNavCollapsed"
         />
         <Component
-          :is="layoutConfig.app.iconRenderer || 'div'"
-          class="header-action d-lg-none"
-          v-bind="layoutConfig.icons.close"
-          @click="toggleIsOverlayNavActive(false)"
+        :is="layoutConfig.app.iconRenderer || 'div'"
+        class="header-action d-lg-none"
+        v-bind="layoutConfig.icons.close"
+        @click="toggleIsOverlayNavActive(false)"
         />
       </slot>
     </div>
@@ -137,12 +153,16 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
         :options="{ wheelPropagation: false }"
         @ps-scroll-y="handleNavScroll"
       >
+      <template
+      v-for="(item, index) in navItems"
+      :key="index"
+      >
         <Component
+           v-if="isAllowed(item)"
           :is="resolveNavItemComponent(item)"
-          v-for="(item, index) in navItems"
-          :key="index"
           :item="item"
-        />
+          />
+      </template>
       </PerfectScrollbar>
     </slot>
   </Component>

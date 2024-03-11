@@ -8,23 +8,26 @@ const routes = [
     title: 'DASHBOARD',
     to: { name: 'dashboard' },
     icon: { icon: 'tabler-smart-home' },
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     title: 'CLIENTS',
     to: { name: 'clients' },
     icon: { icon: 'tabler-user-plus' },
     meta: { requiresAuth: true },
+    requiredPermission:['view_unapproved_clients','view_clients'],
     children:[
       {
         title:'View Clients',
         to:{name:'viewClients'},
-        icon:{icon:'tabler-chevron-right'}
+        icon:{icon:'tabler-chevron-right'},
+        requiredPermission:"view_clients"
       },
       {
          title:'Unapproved Clients',
          to:{name:'unApprovedClients'},
-         icon:{icon:'tabler-chevron-right'}
+         icon:{icon:'tabler-chevron-right'},
+         requiredPermission:"view_unapproved_clients"
       }
     ]
   },
@@ -33,16 +36,21 @@ const routes = [
     to: { name: 'contacts' },
     icon: { icon: 'tabler-user-plus' },
     meta: { requiresAuth: true },
+    requiredPermission:['view_contacts','view_unapproved_contacts'],
     children:[
       {
         title:'view contacts',
         to:{ name:'viewcontact'},
-        icon:{icon:'tabler-chevron-right'}
+        icon:{icon:'tabler-chevron-right'},
+        requiredPermission:"view_contacts"
+
       },
       {
         title:'view unapproved contacts',
         to:{name:'viewunapprovedcontacts'},
-        icon:{icon:'tabler-chevron-right'}
+        icon:{icon:'tabler-chevron-right'},
+        requiredPermission:"view_unapproved_contacts"
+
       }
     ]
   },
@@ -50,23 +58,27 @@ const routes = [
     title: 'ACCOUNTS',
     to: { name: 'accounts' },
     icon: { icon: 'tabler-users-group' },
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
+    requiredPermission:'view_accounts'
   },
   {
     title:'MATERIALS',
     to:{name:'material'},
     icon:{icon:'tabler-rectangular-prism'},
     meta: { requiresAuth: true },
+    requiredPermission:['view_materials','view_materials_rates'],
     children:[
       {
         title:'View Materials',
         to:{ name:'viewMaterial'},
-        icon:{icon:'tabler-chevron-right'}
+        icon:{icon:'tabler-chevron-right'},
+        requiredPermission:"view_materials"
       },
       {
         title:'View Materials Rates',
         to:{ name:'ViewMaterialRates'},
-        icon:{icon:'tabler-chevron-right'}
+        icon:{icon:'tabler-chevron-right'},
+        requiredPermission:"view_materials_rates"
       }
     ]
   },
@@ -92,7 +104,8 @@ const routes = [
     title:'EMPLOYEES',
     to:{name:'employees'},
     icon:{icon:'tabler-user-plus'},
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
+    requiredPermission:'view_employees'
   },
   {
     title:'ROLES & PERMISSIONS',

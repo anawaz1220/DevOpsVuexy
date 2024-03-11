@@ -1,4 +1,3 @@
-import baseurl from "@/@core/app-config/baseUrl";
 import axios from "axios";
 import { defineStore } from "pinia";
 import swal from "sweetalert2";
@@ -49,7 +48,7 @@ export const usePermissionStore = defineStore('permission', {
           Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
         };
         this.LoadingData = true;
-        const res = await axios.post(baseurl + `api/v1/permissions`,payload, { headers });
+        const res = await axios.post(`/permissions`,payload, { headers });
         if (res?.status === 201) {
             successAlert("Permission Added");
           this.LoadingData = false;
@@ -68,7 +67,7 @@ export const usePermissionStore = defineStore('permission', {
             Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
           };
           this.LoadingData = true;
-          const res = await axios.patch(baseurl + `api/v1/permissions${id}`,payload, { headers });
+          const res = await axios.patch(`/permissions${id}`,payload, { headers });
           if (res?.status === 200) {
               successAlert(res?.data?.message);
             this.LoadingData = false;
@@ -87,7 +86,7 @@ export const usePermissionStore = defineStore('permission', {
             Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
           };
           this.LoadingData = true;
-          const res = await axios.delete(baseurl + `api/v1/permissions${id}`,payload, { headers });
+          const res = await axios.delete(`/permissions${id}`,payload, { headers });
           if (res?.status === 200) {
               successAlert("Permission Deleted");
             this.LoadingData = false;
@@ -107,7 +106,7 @@ export const usePermissionStore = defineStore('permission', {
             Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
           };
           this.LoadingData = true;
-          const res = await axios.post(baseurl + `api/v1/roles`,payload, { headers });
+          const res = await axios.post(`/roles`,payload, { headers });
           if (res?.status === 201) {
               successAlert("Permission Added");
             this.LoadingData = false;
@@ -128,7 +127,7 @@ export const usePermissionStore = defineStore('permission', {
             Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
           };
           this.LoadingData = true;
-          const res = await axios.post(baseurl + `api/v1/roles${id}`,{ headers });
+          const res = await axios.post(`/roles${id}`,{ headers });
           if (res?.status === 200) {
             this.userAssignedRoles =res?.data;
             this.LoadingData = false;
@@ -147,7 +146,7 @@ export const usePermissionStore = defineStore('permission', {
             Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
           };
           this.LoadingData = true;
-          const res = await axios.patch(baseurl + `api/v1/roles${id}`,payload, { headers });
+          const res = await axios.patch(`/roles${id}`,payload, { headers });
           if (res?.status === 200) {
               successAlert(res?.data?.message);
             this.LoadingData = false;
@@ -166,7 +165,7 @@ export const usePermissionStore = defineStore('permission', {
             Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
           };
           this.LoadingData = true;
-          const res = await axios.delete(baseurl + `api/v1/roles${id}`,payload, { headers });
+          const res = await axios.delete(`/roles${id}`,payload, { headers });
           if (res?.status === 200) {
               successAlert("Role Deleted");
             this.LoadingData = false;
@@ -185,7 +184,7 @@ async GetAllRoles(id){
       Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
     };
     this.LoadingData = true;
-    const res = await axios.get(baseurl,`api/v1/roles/${id}`,{headers});
+    const res = await axios.get(`/roles/${id}`,{headers});
     if (res?.status === 200){
       this.LoadingData=false;
       this.allRoles=res?.data

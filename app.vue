@@ -10,11 +10,10 @@ import { hexToRgb } from '@layouts/utils'
 import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
 const lStore = useLoginStore()
-async function getUser(){
-  await lStore.fetchLoggedInUser()
-}
+// async function getUser(){
+// }
 
-watch(getUser)
+// watch(getUser)
 const router = useRouter()
 const { global } = useTheme()
 
@@ -23,11 +22,17 @@ initCore()
 initConfigStore()
 
 const configStore = useConfigStore()
+
 const { isMobile } = useDevice()
+
 if (isMobile)
-  configStore.appContentLayoutNav = 'vertical'
+configStore.appContentLayoutNav = 'vertical'
 // intercepter
 
+onMounted(async()=>{
+  await lStore.fetchLoggedInUser()
+
+})
 </script>
 
 <template>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p class="text-h4">ADD CLIENT RATE</p>
     <VCard>
         <v-row class="mb-3">
         <v-col cols="12" sm="6">

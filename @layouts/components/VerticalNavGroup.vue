@@ -1,5 +1,5 @@
 <script setup>
-import { TransitionGroup } from 'vue'
+import { useLoginStore } from '@/store/login'
 import { layoutConfig } from '@layouts'
 import {
   TransitionExpand,
@@ -13,6 +13,7 @@ import {
   isNavGroupActive,
   openGroups,
 } from '@layouts/utils'
+import { TransitionGroup } from 'vue'
 
 const props = defineProps({
   item: {
@@ -24,6 +25,13 @@ const props = defineProps({
 defineOptions({
   name: 'VerticalNavGroup',
 })
+
+
+const loginStore=useLoginStore()
+const permissions=computed(()=>{
+  return loginStore.permissions
+})
+
 
 const route = useRoute()
 const router = useRouter()
@@ -121,10 +129,19 @@ watch(configStore.isVerticalNavMini(isVerticalNavHovered), val => {
   isGroupOpen.value = val ? false : isGroupActive.value
 })
 
-//   isGroupOpen.value = value ? false : isGroupActive.value
 
-// })
-const isMounted = useMounted()
+
+function isAllowed(item){
+  
+    if(!!!item.requiredPermission) return true
+  else if(Array.isArray(item.requiredPermission))
+  return permissions.value?.some(permission=> item.requiredPermission.includes(permission))
+
+  else if( typeof item.requiredPermission=='string' &&
+   permissions.value?.includes(item.requiredPermission)) return true
+}
+
+
 </script>
 
 <template>
@@ -194,12 +211,16 @@ const isMounted = useMounted()
         v-show="isGroupOpen"
         class="nav-group-children"
       >
-        <Component
-          :is="'children' in child ? 'VerticalNavGroup' : VerticalNavLink"
-          v-for="child in item.children"
-          :key="child.title"
-          :item="child"
-        />
+      <template
+      v-for="child in item.children"
+      :key="child.title"
+      >
+      <Component
+      :is="'children' in child ? 'VerticalNavGroup' : VerticalNavLink"
+      v-if="isAllowed(child)"
+      :item="child"
+      />
+    </template>
       </ul>
     </TransitionExpand>
   </li>

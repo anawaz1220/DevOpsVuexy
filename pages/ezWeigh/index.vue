@@ -165,6 +165,10 @@
 </template>
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable';
+import { useClientStore } from '@/store/client';
+import { useEzweighStore } from '@/store/ezweigh';
+import { useTruckStore } from '@/store/truck';
+
 // definePageMeta({
 //   middleware: 'auth'
 // })

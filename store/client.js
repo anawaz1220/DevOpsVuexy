@@ -1,4 +1,3 @@
-import baseurl from "@/@core/app-config/baseUrl";
 import axios from "axios";
 import { defineStore } from "pinia";
 import swal from "sweetalert2";
@@ -55,7 +54,7 @@ export const useClientStore = defineStore('clients', {
 
         console.log("headers", headers);
         this.LoadingData = true;
-        const res = await axios.get(baseurl + `api/v1/clients`, { headers });
+        const res = await axios.get(`/clients`, { headers });
         if (res?.status === 200) {
           this.allClients = res?.data;
           this.LoadingData = false;
@@ -74,7 +73,7 @@ export const useClientStore = defineStore('clients', {
           Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
         };
         this.LoadingData = true;
-        const res = await axios.get(baseurl + `api/v1/clients/${id}`, {headers});
+        const res = await axios.get(`/clients/${id}`, {headers});
         if (res?.status === 200) {
           this.clientsDetails = res?.data;
           this.LoadingData = false;
@@ -93,7 +92,7 @@ export const useClientStore = defineStore('clients', {
           Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
         };
         this.clientLoading =true;
-        const res= await axios.post(baseurl + `api/v1/imports/client-data`, payload,{headers});
+        const res= await axios.post(`/imports/client-data`, payload,{headers});
         if(res?.status==201){
           this.clientLoading =false;
           successAlert("Client data Uploaded");
@@ -109,7 +108,7 @@ export const useClientStore = defineStore('clients', {
           const headers = {
           Authorization: `Bearer ${this.authToken}`, // Include correctly formatted authorization header
         };
-        const res=await axios.get(baseurl+`api/v1/clients/${clientId}`,{headers})
+        const res=await axios.get(`/clients/${clientId}`,{headers})
         this.clientSummary=res?.data
       }
       catch(error){

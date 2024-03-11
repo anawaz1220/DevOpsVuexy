@@ -22,8 +22,8 @@
           ACCOUNT LIST
         </h3>
         <span class="d-flex gap-3">
-          <VBtn @click="openAccountInfo">Add Account</VBtn>
-          <VBtn @click="openImportAccount">Import Account</VBtn>
+          <InputBtn :requiredPermission="'add_account'" @click="openAccountInfo">Add Account</InputBtn>
+          <InputBtn :requiredPermission="'add_account'" @click="openImportAccount">Import Account</InputBtn>
         </span>
       </div>
       <div class="d-flex justify-end flex-wrap">
@@ -47,9 +47,16 @@
         <!-- =========== -->
         <!-- Actions -->
         <template #item.actions="{item}">
-          <IconBtn @click="openAccountInfo(item)">
+           <InputBtn 
+            icon
+             :color="'transparent'"
+              :requiredPermission="'update_account'"
+               :variant="'flat'"
+                @click="openAccountInfo(item)"
+                 >
             <VIcon icon="tabler-edit" />
-          </IconBtn>
+        </InputBtn>
+          
         </template>
         <template #bottom>
           <VCardText class="pt-2">
@@ -138,21 +145,20 @@
         <VCardActions>
           <VSpacer />
 
-          <VBtn
-            color="error"
-            variant="outlined"
+          <InputBtn
+            :color="'error'"
+            :variant="'outlined'"
             @click="closeAccountInfo"
           >
             Close
-          </VBtn>
+          </InputBtn>
 
-          <VBtn
-            color="primary"
-            variant="elevated"
+          <InputBtn
+            :variant="'elevated'"
             @click="saveAccount(selectedClient, accountTitle, accountNo)"
           >
             Submit
-          </VBtn>
+          </InputBtn>
           <VSpacer />
         </VCardActions>
       </div>
@@ -189,20 +195,19 @@
       <div class="d-flex justify-end mt-4">
         <VCardActions>
           <VSpacer />
-          <VBtn
-            color="error"
-            variant="outlined"
+          <InputBtn
+            :color="'error'"
+            :variant="'outlined'"
             @click="closeImportAccount"
           >
             close
-          </VBtn>
-          <VBtn
-            color="primary"
-            variant="elevated"
+          </InputBtn>
+          <InputBtn
+            :variant="'elevated'"
             @click="saveAccountFile"
           >
             submit
-          </VBtn>
+          </InputBtn>
           <VSpacer />
         </VCardActions>
       </div>
@@ -216,6 +221,8 @@ import { useAccountStore } from "@/store/account";
 import { useClientStore } from "@/store/client";
 import { onBeforeMount } from 'vue';
 import { VDataTable } from "vuetify/labs/VDataTable";
+import InputBtn from "@/components/Input/Btn.vue"
+
 // model variables
 
 const groups = ["GFL", "Numbered Clients", "TSC"]

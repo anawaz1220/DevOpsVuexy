@@ -8,7 +8,9 @@
       size="50"
     />
   </div>
+
   <span v-else>
+    
     <div class="bread-crumb d-flex justify-end">
       <VBreadcrumbs :items="BreadcrumbsData">
         <template #title="{ item }">
@@ -29,12 +31,11 @@
         <div class="d-flex justify-space-between flex-wrap py-5">
           <h3 class="mt-3">ALL FLEET</h3>
           <div class="d-flex gap-3 flex-wrap">
-            <VBtn
-              class="add-client"
+            <InputBtn 
               @click="openAssignment"
-            >TRUCK ASSIGNMENT</VBtn>
-            <VBtn @click="openTruckInfo">ADD TRUCK</VBtn>
-            <VBtn @click="openTruckData">IMPORT TRUCK</VBtn>
+              >TRUCK ASSIGNMENT</InputBtn>
+            <InputBtn @click="openTruckInfo">ADD TRUCK</InputBtn>
+            <InputBtn @click="openTruckData">IMPORT TRUCK</InputBtn>
           </div>
         </div>
         <div class="d-flex justify-end flex-wrap">
@@ -170,20 +171,19 @@
         <div class="d-flex justify-end mt-4">
           <VCardActions>
             <VSpacer />
-            <VBtn
-              color="error"
-              variant="outlined"
+            <InputBtn
+              :color="'error'"
+              :variant="'outlined'"
               @click="closeAssignment"
             >
               close
-            </VBtn>
-            <VBtn
-              color="primary"
-              variant="elevated"
+            </InputBtn>
+            <InputBtn
+              :variant="'elevated'"
               @click="assignTruck(newclient, selectedTruck)"
             >
               submit
-            </VBtn>
+            </InputBtn>
             <VSpacer />
           </VCardActions>
         </div>
@@ -224,20 +224,19 @@
         <div class="d-flex justify-end mt-4">
           <VCardActions>
             <VSpacer />
-            <VBtn
-              color="error"
-              variant="outlined"
+            <InputBtn
+              :color="'error'"
+              :variant="'outlined'"
               @click="closeTruckData"
             >
               close
-            </VBtn>
-            <VBtn
-              color="primary"
-              variant="elevated"
+            </InputBtn>
+            <InputBtn
+              :variant="'elevated'"
               @click="importTruckData"
             >
               submit
-            </VBtn>
+            </InputBtn>
             <VSpacer />
           </VCardActions>
         </div>
@@ -256,25 +255,27 @@
 </template>
 
 <script setup>
+import InputBtn from '@/components/Input/Btn.vue';
 import FormFleet from '@/components/form/Fleet.vue';
 import { useClientStore } from "@/store/client";
 import { useTruckStore } from "@/store/truck";
 import { ref } from 'vue';
 import { VDataTable } from "vuetify/labs/VDataTable";
-const currentPage = ref(1)
-const truckPlateNo = ref(null)
-const truckCompany = ref(null)
-const truckColor = ref(null)
-const truckModel = ref(null)
-const truckUnit = ref('KG')
-const truckWeight = ref(null)
-const truckVin = ref(null)
-const truckDescription = ref(null)
 const search = ref('')
 const options = ref({ page: 1, itemsPerPage: 5, sortBy: [''], sortDesc: [false] })
 const tStore = useTruckStore()
 const cStore = useClientStore()
 const openTruckDetailsDialog =ref(false)
+const addTruckInfo = ref(false)
+
+
+const getClients = computed(() => {
+  return cStore.allClients
+})
+
+const selectedclient = ref(getClients[0])
+const newclient = ref(getClients[1])
+
 // info dialog
 const truckAssignment = ref(false)
 
@@ -309,27 +310,6 @@ const getClientTrucks = computed(() => {
   return tStore.truckBYclient
 })
 
-const getTruckPlates = computed(() => {
-  // console.log(tStore.AllTrucks, 'trucks');
-  return tStore.AllTrucks.map(truck => truck.plate_no)
-})
-
-const getClients = computed(() => {
-  // const clientNames = cStore.allClients.map(client => client.name);
-  // console.log(clientNames);
-  return cStore.allClients
-
-  // return cStore.allClients;
-})
-const selectedclient = ref(getClients[0])
-const newclient = ref(getClients[1])
-// prefilled update data
-// function getUpdateData(){
-  
-// }
-
-// truck info dialog
-const addTruckInfo = ref(false)
 
 const openTruckInfo = (item) => {
   addTruckInfo.value = true;

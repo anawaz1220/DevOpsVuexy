@@ -1,4 +1,3 @@
-import baseurl from "@/@core/app-config/baseUrl";
 import axios from "axios";
 import { defineStore } from "pinia";
 import swal from "sweetalert2";
@@ -47,7 +46,7 @@ export const useContactStore = defineStore('contact',{
                 const headers = {
                     Authorization: `Bearer ${this.authToken}`,
                 };
-                const res = await axios.get(baseurl + 'api/v1/accounts', { headers });
+                const res = await axios.get('/accounts', { headers });
                 if(res?.status == 200){
                     this.allAccounts = res?.data
                     this.loadingData = false
@@ -65,7 +64,7 @@ export const useContactStore = defineStore('contact',{
         //         const headers = {
         //             Authorization: `Bearer ${this.authToken}`,
         //         };
-        //         const res = await axios.post(baseurl + 'api/v1/accounts', null, { headers });
+        //         const res = await axios.post('/accounts', null, { headers });
         //         if(res.status == 200){
         //             successAlert('successful')
         //             this.loadingData =false;
@@ -83,7 +82,7 @@ export const useContactStore = defineStore('contact',{
         //         const headers = {
         //             Authorization: `Bearer ${this.authToken}`,
         //         };
-        //         const res = await axios.get(baseurl + `api/v1/accounts/${id}`, { headers });
+        //         const res = await axios.get(`/accounts/${id}`, { headers });
         //         if(res?.status==200){
         //             this.AccountsId = res?.data;
         //             this.LoadingData = false;
@@ -102,7 +101,7 @@ export const useContactStore = defineStore('contact',{
         //         const headers = {
         //             Authorization: `Bearer ${this.authToken}`,
         //         };
-        //         const res = await axios.patch(baseurl + `api/v1/accounts/${id}`, null, { headers });
+        //         const res = await axios.patch(`/accounts/${id}`, null, { headers });
         //         if(res.status == 200){
         //             successAlert('successful')
         //             this.loadingData =false;
@@ -120,7 +119,7 @@ export const useContactStore = defineStore('contact',{
         //         const headers = {
         //             Authorization: `Bearer ${this.authToken}`,
         //         };
-        //         const res = await axios.get(baseurl + `api/v1/accounts/by-client/${id}`, { headers });
+        //         const res = await axios.get(`/accounts/by-client/${id}`, { headers });
         //         if(res.status == 200){
         //             this.accountBYclient = res?.data
         //             successAlert('successful')

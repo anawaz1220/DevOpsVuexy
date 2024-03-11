@@ -18,7 +18,7 @@
         <v-card-text>
           <div class=" py-5 d-flex justify-end">
             
-            <v-btn @click="openAssgRole">Create Employee</v-btn>
+            <InputBtn :requiredPermission="'add_employee'" @click="openAssgRole">Create Employee</InputBtn>
           </div>
           <div class="d-flex justify-space-between flex-wrap ">
           <span class="d-flex gap-3 ">
@@ -44,9 +44,15 @@
            <!-- Actions -->
         <template #item.actions="{ item }">
          
-            <IconBtn @click="openAssgRole">
+            <InputBtn 
+            icon
+             :color="'transparent'"
+              :requiredPermission="'update_employee'"
+               :variant="'flat'"
+                 @click="openAssgRole"
+                 >
                 <VIcon icon="tabler-edit" />
-            </IconBtn>
+            </InputBtn>
          
         </template>
           </VDataTable>
@@ -87,21 +93,20 @@
           <VCardActions>
             <VSpacer />
     
-            <VBtn
-              color="error"
-              variant="outlined"
+            <InputBtn
+              :color="'error'"
+              :variant="'outlined'"
               @click="closeAssgRole"
             >
               Close
-            </VBtn>
+            </InputBtn>
     
-            <VBtn
-              color="primary"
-              variant="elevated"
+            <InputBtn
+              :variant="'elevated'"
               @click="deleteItemConfirm"
             >
               Submit
-            </VBtn>
+            </InputBtn>
     
             <VSpacer />
           </VCardActions>
@@ -110,6 +115,7 @@
       </VDialog>
 </template>
 <script setup>
+import InputBtn from "@/components/Input/Btn.vue"
 import { VDataTable } from 'vuetify/labs/VDataTable';
 // definePageMeta({
 //   middleware: 'auth'

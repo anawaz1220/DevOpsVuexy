@@ -1,4 +1,3 @@
-import baseurl from "@/@core/app-config/baseUrl"
 import axios from "axios"
 import { defineStore } from "pinia"
 import swal from "sweetalert2"
@@ -50,7 +49,7 @@ export const useEzweighStore = defineStore("ezweigh", {
             Authorization: `Bearer ${this.authToken}`,
           }
   
-          const res = await axios.post(baseurl + "api/v1/transactions/queue-transaction", payload, {
+          const res = await axios.post("/transactions/queue-transaction", payload, {
             headers,
           })
   
@@ -72,7 +71,7 @@ export const useEzweighStore = defineStore("ezweigh", {
           Authorization: `Bearer ${this.authToken}`,
         }
 
-        const res = await axios.get(baseurl + "api/v1/transactions", { headers })
+        const res = await axios.get("/transactions", { headers })
         if (res?.status == 201) {
           this.allTransactions = res?.data
           this.loadingData = false

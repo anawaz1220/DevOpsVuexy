@@ -6,6 +6,9 @@ export default defineNuxtConfig({
     // Add your middleware here, e.g.,
     '~/middleware/auth', // Assuming your middleware is named checkLogin.js
   ],
+  axios: {
+    baseURL: 'https://api.dev.efaci-saas.net/api/v1',
+  },
   app: {
     head: {
       titleTemplate: 'ezzton',
@@ -33,7 +36,7 @@ export default defineNuxtConfig({
       path: '~/components/global',
       global: true,
     }, {
-      path: '~/components',
+      path: '@/components',
       pathPrefix: false,
       global:true
     }],
