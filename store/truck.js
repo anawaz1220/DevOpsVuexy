@@ -167,7 +167,6 @@ export const useTruckStore = defineStore("truck", {
       // console.log(payload, "from request");
       await this.initializeToken() // Ensure token initialization is complete
       try {
-        this.loadingData = true
 
         const headers = {
           "Content-Type": "application/json",
@@ -182,11 +181,9 @@ export const useTruckStore = defineStore("truck", {
 
         if (res.status == 201) {
           successAlert("Successful")
-          this.loadingData = false
         } else throw new Error(res?.data?.message)
       } catch(res){
         errorAlert(res?.response?.data?.message)
-        this.loadingData = false
       }
     },
 
@@ -194,8 +191,7 @@ export const useTruckStore = defineStore("truck", {
       // console.log(payload, "from request");
       await this.initializeToken() // Ensure token initialization is complete
       try {
-        this.loadingData = true
-
+        
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${this.authToken}`,
@@ -207,13 +203,12 @@ export const useTruckStore = defineStore("truck", {
           { headers: headers },
         )
 
-        if (res.status == 201) {
+        if (res.status == 201||res.status == 200) {
           successAlert("Successful")
-          this.loadingData = false
         } else throw new Error(res?.data?.message)
       } catch(res){
+        console.log("error in updating truck",res)
         errorAlert(res?.response?.data?.message)
-        this.loadingData = false
       }
     },
     async FetchAssignTruck(payload) {
@@ -272,6 +267,7 @@ export const useTruckStore = defineStore("truck", {
         this.loadingData = false
       }
     },
+
     async fetchTruckDetails(id){
       await this.initializeToken()
       try{
@@ -287,8 +283,11 @@ export const useTruckStore = defineStore("truck", {
         console.log(err.response.data.message, "errors")
       }
     },
+
     saveTruckData(item){
       this.TruckUpdate =item;
-    }
+    },
+
+    
   },
 })

@@ -25,6 +25,7 @@ export default defineNuxtConfig({
   ],
 
   components: {
+    global:true,
     dirs: [{
       path: '@/@core/components',
       pathPrefix: false,
@@ -34,6 +35,7 @@ export default defineNuxtConfig({
     }, {
       path: '~/components',
       pathPrefix: false,
+      global:true
     }],
   },
 

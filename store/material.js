@@ -104,13 +104,36 @@ export const useMaterialsStore = defineStore('materials', {
                         Authorization: `Bearer ${this.authToken}`,
                     };
                     const res= await axios.put(baseurl + `api/v1/materials/client-rate`,payload, { headers });
-                    if(res?.status==201){
+                    if(res?.status==201||res.status==200){
                         this.addingLoad=false;
                         successAlert("client rate Added");
+                        return [res,null]
                     }else throw new Error(res?.data?.message);
                 }catch(res){
+                    console.log("error in updating client rate",res)
                     errorAlert(res?.response?.data?.message)
                     this.addingLoad=false;
+                        return [null,res]
+                }
+            },
+            async addBoardRate(payload){
+                await this.initializeToken(); // Ensure token initialization is complete
+                try{
+                    this.addingLoad =true;
+                    const headers = {
+                        Authorization: `Bearer ${this.authToken}`,
+                    };
+                    const res= await axios.put(baseurl + `api/v1/materials/board-rate`,payload, { headers });
+                    if(res?.status==201||res.status==200){
+                        this.addingLoad=false;
+                        successAlert("Board rate Added");
+                        return [res,null]
+                    }else throw new Error(res?.data?.message);
+                }catch(res){
+                    console.log("error in updating board rate",res)
+                    errorAlert(res?.response?.data?.message)
+                    this.addingLoad=false;
+                        return [null,res]
                 }
             },
         }

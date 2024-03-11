@@ -38,12 +38,49 @@
            
           <!-- =========== -->
            <!-- Actions -->
-        <template #item.actions="{ item }">
-            <IconBtn @click="openEditDialog(item)">
-                <VIcon icon="tabler-edit" />
-            </IconBtn>
+         <template #item.actions="{ item }">
+        <div class="d-flex gap-1">
+          <IconBtn @click="toggleClientDialog(item)">
+            <VIcon icon="" />
+          </IconBtn>
          
-        </template>
+          <VBtn
+            icon
+            color="medium-emphasis"
+            density="comfortable"
+            variant="text"
+          >
+            <VIcon
+           
+              size="24"
+              icon="tabler-dots-vertical"
+            />
+            <VMenu activator="parent" >
+              <VList  class="v-tabs-pill">
+                <VListItem 
+                @click="openEditDialog(item)" 
+                >
+                  <VListItemTitle 
+                  style="font-weight: 600; cursor: pointer;" 
+                  >
+                  <v-icon 
+                  icon="tabler-file-dots"
+                   class="me-2"
+                   >
+                  </v-icon >
+                  Add board rate
+                </VListItemTitle>
+                </VListItem>
+
+                <VListItem link>
+                  <VListItemTitle  @click="ShowAddClientRate=true,selectedMaterialId=item.id" style="font-weight: 600;" ><v-icon icon="tabler-file-dots" class="me-2"></v-icon>Add client rate</VListItemTitle>
+                </VListItem>
+              </VList>
+            </VMenu>
+          </VBtn>
+          
+        </div>
+      </template>
         <template #bottom>
       <VCardText class="pt-2">
         <div class="d-flex flex-wrap justify-center justify-sm-space-between gap-y-2 mt-2">
@@ -144,7 +181,7 @@
               color="primary"
               variant="elevated"
               :disabled="mStore.LoadingData"
-              :loading="mStore.LoadingData"
+              :loading="loading"
               @click.prevent="storeMaterial"
             >
               Submit
@@ -207,9 +244,21 @@
       </VCard>
     </VDialog>
     <!-- 👉 ADD  TRUCK  INFO DIALOG  -->
+  
+   
+    
+    <VDialog v-model="ShowAddClientRate" max-width="650px">
+      <VCard class="px-5 py-5">
+     <FormMaterialClientRate :materialId="selectedMaterialId" @closeDialog="ShowAddClientRate=false" />
+  </VCard>
+</VDialog>
     </span>
 </template>
 <script setup>
+import { useMaterialsStore } from "@/store/material";
+import { VDataTable } from 'vuetify/labs/VDataTable';
+import FormMaterialClientRate from "../../components/form/MaterialClientRate.vue";
+
 const name = ref("")
 const materialId = ref("");
 const boardRate = ref("")
@@ -218,6 +267,10 @@ const MaterialValue = ref(null)
 const slabWeight = ref("")
 const weightBreak = ref("")
 const search =ref("")
+const loading=ref(false)
+const ShowAddClientRate=ref(false)
+const selectedMaterialId=ref(0)
+
 const options = ref({ page: 1, itemsPerPage: 5, sortBy: [''], sortDesc: [false] })
 // definePageMeta({
 //   middleware: 'auth'
@@ -235,8 +288,6 @@ const BreadcrumbsData = [
     link: "/ViewMaterial",
   },
 ];
-import { useMaterialsStore } from "@/store/material";
-import { VDataTable } from 'vuetify/labs/VDataTable';
 const mStore = useMaterialsStore();
 const allMaterials = computed(() =>{
   return mStore.allMaterials;
@@ -306,17 +357,30 @@ const closeEditDialog = () => {
 
    // store material
    async function storeMaterial(){
-  const formData = new FormData()
-  if(materialId.value){
-    formData.append("materialId", materialId.value);
+    loading.value=true
+  // const formData = new FormData()
+  // if(materialId.value){
+  //   formData.append("materialId", materialId.value);
+  // }
+  // formData.append("board_rate",boardRate.value)
+  // formData.append("slab_rate",slabRate.value)
+  // formData.append("slab_weight",slabWeight.value)
+  // formData.append("weight_break",weightBreak.value)
+
+  let body={
+    materialId:materialId.value,
+    rate:boardRate.value,
+    slab_rate:slabRate.value,
+    slab_weight:slabWeight.value,
+    weight_break:weightBreak.value
   }
-  formData.append("board_rate",boardRate.value)
-  formData.append("slab_rate",slabRate.value)
-  formData.append("slab_weight",slabWeight.value)
-  formData.append("weight_break",weightBreak.value)
-    mStore.addNewMaterial(formData)
+
+
+  
+  await mStore.addBoardRate(body)
+    loading.value=false
     closeEditDialog()
-    getMaterials()
+   getMaterials()
   }
 
   async function saveMaterialinfo(MaterialValue) {
@@ -328,6 +392,7 @@ const closeEditDialog = () => {
   addMaterial.value = false
   console.log(payload, 'before request-vue');
   await mStore.addNewMaterialType(payload)
+  getMaterials()
 }
 
 </script>

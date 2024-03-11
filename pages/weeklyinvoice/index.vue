@@ -39,8 +39,9 @@
   
   <script setup>
   import { useClientStore } from '@/store/client';
-  import { useRoute } from 'vue-router';
-  import { VDataTable } from 'vuetify/labs/VDataTable';
+import { useRoute } from 'vue-router';
+import { VDataTable } from 'vuetify/labs/VDataTable';
+
   const route = useRoute()
   const clientStore = useClientStore()
   const headers = [
@@ -77,6 +78,7 @@
       key: 'city',
     },
   ]
+  
   // breadcrumbs
   const BreadcrumbsData = [
     {
@@ -95,14 +97,16 @@
       link: "/weeklyinvoice",
     }
   ];
+
   // fetch all clients details by id
   const  Cdetails = computed(()=>{
     return clientStore.clientsDetails
   })
   // ===========
+
   const AllClientsDetails = async () =>{
   await clientStore.fetchClientsDetails(route?.query?.id)
-  
   }
+
   await AllClientsDetails();
   </script>
