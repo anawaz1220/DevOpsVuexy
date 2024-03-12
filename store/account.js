@@ -85,7 +85,7 @@ export const useAccountStore = defineStore("account", {
         this.loadingData = false
       }
     },
-    async updateAccount(id) {
+    async updateAccount(id, account) {
       await this.initializeToken() // Ensure token initialization is complete
       try {
         this.loadingData = true
@@ -94,11 +94,11 @@ export const useAccountStore = defineStore("account", {
           Authorization: `Bearer ${this.authToken}`,
         }
 
-        const res = await axios.patch(baseurl + `api/v1/accounts/${id}`,{
+        const res = await axios.patch(baseurl + `api/v1/accounts/${id}`,account,{
           headers,
         })
 
-        if (res.status == 201) {
+        if (res.status == 201|| res.status == 200) {
           successAlert("successful")
           this.loadingData = false
         } else throw new Error(res?.data?.message)

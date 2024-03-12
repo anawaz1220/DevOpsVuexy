@@ -245,14 +245,9 @@
     </VDialog>
   </span>
   <!-- truck details -->
-  <v-dialog v-model="openTruckDetailsDialog" width="900">
-    <DialogCloseBtn @click="openTruckDetailsDialog=false" />
-    <v-card>
-      <v-card-text>
+  <AppDialog v-model="openTruckDetailsDialog" :maxWidth="1100" :label="'Edit Truck Info'" >
        <VDataTable :headers="header" :items="getData"></VDataTable>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+  </AppDialog>
 </template>
 
 <script setup>

@@ -1,65 +1,72 @@
 <template>
  
-  <div>
-    <p class="text-h3">Client Details</p>
-    <v-row no-gutters>
+  <div class="px-sm-4" v-if="!!clientDetails">
+    <v-row >
       <v-col cols="12" sm="6" >
-        <span class="text-h5">
-        Name:
-      </span>
-       {{clientDetails?.name??""}}
+       <AppTextField
+       disabled
+       v-model="clientDetails.name"
+       label="Name"
+       />
       </v-col>
       <v-col cols="12" sm="6" >
-        <span class="text-h5">
-        Email:
-      </span>
-       {{clientDetails?.email??""}}
+        <AppTextField
+       disabled
+       v-model="clientDetails.email"
+       label="Email"
+       />
       </v-col>
     </v-row>
           
           <v-row>
     <v-col cols="12" sm="6" >
-        <span class="text-h5">
-        Contact:
-      </span>
-       {{clientDetails?.contact??""}}
+       <AppTextField
+       disabled
+       v-model="clientDetails.contact"
+       label="Contact"
+       />
       </v-col>
       <v-col cols="12" sm="6" >
-        <span class="text-h5">
-        Address:
-      </span>
-       {{clientDetails?.address??""}}
+        <AppTextField
+       disabled
+       v-model="clientDetails.address"
+       label="Address"
+       />
       </v-col>
           </v-row>
 
           <v-row>
       <v-col cols="12" sm="6" >
-        <span class="text-h5">
-        Contact:
-      </span>
-       {{clientDetails?.contact??""}}
+        <AppTextField
+       disabled
+       v-model="clientDetails.contact"
+       label="Contact"
+       />
       </v-col>
       <v-col cols="12" sm="6" >
-        <span class="text-h5">
-        City:
-      </span>
-       {{clientDetails?.city??""}}
+        <AppTextField
+       disabled
+       v-model="clientDetails.city"
+       label="City"
+       />
       </v-col>
         </v-row>
 
    
           <v-row>
       <v-col cols="12" sm="6" >
-        <span class="text-h5">
-        User Type:
-      </span>
-       {{clientDetails?.user_type??""}}
+       <AppTextField
+       disabled
+       v-model="clientDetails.user_type"
+       label="User Type"
+       />
       </v-col>
       <v-col cols="12" sm="6" >
-        <span class="text-h5">
-        Contact Person:
-      </span>
-       {{clientDetails?.contact_person??""}}
+        <AppTextField
+       disabled
+       v-model="clientDetails.contact_person"
+       label="Contact Person"
+       />
       </v-col>
         </v-row>
 
@@ -69,9 +76,8 @@
         <span class="text-h5">
           Verified:
         </span>
-        <v-chip :color="clientDetails?.is_verified==true?'primary':'error'" variant="flat" >
-
-          {{clientDetails?.is_verified==true?'Yes':'No'}}
+        <v-chip class="ml-2 " :color="clientDetails?.is_verified==true?'primary':'error'" variant="flat" >
+          {{clientDetails?.is_verified==true?'yes ✅':'No ❌'}}
     </v-chip>
     </v-col>
         </v-row>
@@ -82,10 +88,13 @@
         <v-table>
     <thead>
       <tr>
-        <th class="text-left">
+        <th class="text-left text-h4">
+          #
+        </th>
+        <th class="text-left text-h4">
           Title
         </th>
-        <th class="text-left">
+        <th class="text-left text-h4">
           Status
         </th>
       </tr>
@@ -97,6 +106,7 @@
         v-for="item,i in clientAccounts"
         :key="item.name"
       >
+        <td>{{i+1}}</td>
         <td>{{ item.name }}</td>
         <td>{{ item.status }}</td>
       </tr>

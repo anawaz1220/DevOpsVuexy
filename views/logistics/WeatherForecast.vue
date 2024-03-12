@@ -171,11 +171,7 @@ onMounted(() => {
 
 
 <style scoped>
-.container-weather{
-  display: flex;
-  justify-content: end;
-  width:100%;
-}
+
   
 .weather-box {
   padding: 20px 0px 0px 0px;

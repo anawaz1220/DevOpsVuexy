@@ -218,16 +218,17 @@
   </v-card>
  </v-dialog>
 
- <VDialog v-model="showClientSummary" max-width="650px">
-   <VCard class="px-5 py-5">
+ <!-- Using modal component instead of vueitfy -->
+
+ <AppDialog v-model="showClientSummary" :maxWidth="'650px'" :label="'Client Summary'">
     <ClientSummary  :clientId="selectClientForDetailsId"/>
-  </VCard>
-</VDialog>
+</AppDialog>
 
 
 </template>
 
 <script setup lang="ts">
+import AppDialog from '@/components/AppDialog.vue';
 import { useClientStore } from '@/store/client';
 import { useRouter } from "vue-router";
 import { VDataTable } from 'vuetify/labs/VDataTable';

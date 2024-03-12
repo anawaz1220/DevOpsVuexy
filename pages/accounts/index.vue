@@ -47,7 +47,7 @@
         <!-- =========== -->
         <!-- Actions -->
         <template #item.actions="{item}">
-          <IconBtn @click="openAccountInfo(item)">
+          <IconBtn @click="editClientDialog=true, accountToEdit=item">
             <VIcon icon="tabler-edit" />
           </IconBtn>
         </template>
@@ -150,6 +150,7 @@
             color="primary"
             variant="elevated"
             @click="saveAccount(selectedClient, accountTitle, accountNo)"
+            :loading="loading"
           >
             Submit
           </VBtn>
@@ -199,6 +200,7 @@
           <VBtn
             color="primary"
             variant="elevated"
+            :loading="loading"
             @click="saveAccountFile"
           >
             submit
@@ -208,18 +210,21 @@
       </div>
     </VCard>
   </VDialog>
-
+  
+<AppDialog v-model="editClientDialog" :maxWidth="'500'" :label="'Edit Account'">
+<FormEditAccount @closeDialog="editClientDialog=false" :accountToEdit="accountToEdit" />
+</AppDialog>
 </template>
 
 <script setup>
+import FormEditAccount from "@/components/form/EditAccount.vue";
 import { useAccountStore } from "@/store/account";
 import { useClientStore } from "@/store/client";
 import { onBeforeMount } from 'vue';
 import { VDataTable } from "vuetify/labs/VDataTable";
-// model variables
-
 const groups = ["GFL", "Numbered Clients", "TSC"]
 const items = [10, 20, 50, 100]
+const editClientDialog=ref(false)
 const accountNo = ref(null)
 const accountTitle = ref(null)
 const accountFile = ref(null)
@@ -227,6 +232,9 @@ const options = ref({ page: 1, itemsPerPage: 5, sortBy: [''], sortDesc: [false] 
 const search = ref('')
 const cStore = useClientStore()
 const aStore = useAccountStore()
+const accountToEdit=ref(null)
+const loading=ref(false)
+
 const getClients = computed(() => {
   return cStore.allClients
 })
@@ -321,25 +329,25 @@ const closeImportAccount = () => {
 
 // api call for fetching accounts
 async function saveAccount(selectedClient, accountTitle, accountNo) {
-  console.log('received data', selectedClient.id, accountTitle, accountNo)
-if(data.value?.id){
-  await aStore.updateAccount(data.value?.id)
-  AccountInfo.value = false
-  aStore.fetchAllAccounts()
-} else{
+ loading.value=true
+
   const payloadAdd = {
     "title": accountTitle,
     "account_no": accountNo,
     "client_id": selectedClient.id,
   }
+
   await aStore.FetchCreateNewAcc(payloadAdd)
   AccountInfo.value = false
-  aStore.fetchAllAccounts()
+  loading.value=false
+  await aStore.fetchAllAccounts()
+
 }
-}
+
 function importAccounts(event) {
   accountFile.value = event.target.files[0]
 }
+
 async function saveAccountFile() {
   if (accountFile.value) {
     const formData = new FormData()
@@ -352,14 +360,10 @@ async function saveAccountFile() {
   }
 }
 
-async function fetchAccounts() {
-  aStore.fetchAllAccounts()
 
-  await cStore.fetchAllClients()
-}
-onBeforeMount(() => {
+onBeforeMount(async() => {
   // Your logic before the component is mounted goes here
-  fetchAccounts()
-  console.log('Component is about to be mounted')
+ await aStore.fetchAllAccounts()
+  await cStore.fetchAllClients()
 })
 </script>
