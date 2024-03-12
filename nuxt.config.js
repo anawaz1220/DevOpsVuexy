@@ -2,25 +2,16 @@ import { fileURLToPath } from 'node:url'
 import vuetify from 'vite-plugin-vuetify'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  middleware: [
-    // Add your middleware here, e.g.,
-    '~/middleware/auth', // Assuming your middleware is named checkLogin.js
-  ],
-  axios: {
-    baseURL: 'https://api.dev.efaci-saas.net/api/v1',
-  },
+
+
+  
   app: {
     head: {
       titleTemplate: 'ezzton',
       title: 'Ezzton',
-
-      // link: [{
-      //   rel: 'icon',
-      //   type: 'image',
-      //   href: favicon,
-      // }],
     },
   },
+
   css: [
     '@core/scss/template/index.scss',
     '@styles/styles.scss',
@@ -49,10 +40,6 @@ export default defineNuxtConfig({
     presets: [],
   },
 
-  hooks: {},
-
-  experimental: {
-  },
 
   typescript: {
     tsConfig: {
@@ -130,4 +117,5 @@ export default defineNuxtConfig({
   },
 
   modules: ['@vueuse/nuxt', '@nuxtjs/device', '@pinia/nuxt','@vueuse/nuxt'],
+
 })

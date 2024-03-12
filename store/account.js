@@ -2,6 +2,8 @@ import axios from "axios"
 import { defineStore } from "pinia"
 import swal from "sweetalert2"
 
+axios.defaults.baseURL='https://api.dev.efaci-saas.net/api/v1'
+
 const errorAlert = message => {
   new swal({
     icon: "error",

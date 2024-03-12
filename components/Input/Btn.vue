@@ -51,7 +51,6 @@ const props = defineProps({
 onMounted(()=>{
   if(!!!props.requiredPermission) return isAllowed.value=true
   
-  
   if(permissions.value?.includes(props.requiredPermission)){
     isAllowed.value=true
   }

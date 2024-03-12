@@ -7,14 +7,12 @@ import {
   useConfigStore,
 } from '@core/stores/config'
 import { hexToRgb } from '@layouts/utils'
-import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
 const lStore = useLoginStore()
 // async function getUser(){
 // }
 
 // watch(getUser)
-const router = useRouter()
 const { global } = useTheme()
 
 // ℹ️ Sync current theme with initial loader theme
@@ -31,8 +29,8 @@ configStore.appContentLayoutNav = 'vertical'
 
 onMounted(async()=>{
   await lStore.fetchLoggedInUser()
-
 })
+  
 </script>
 
 <template>

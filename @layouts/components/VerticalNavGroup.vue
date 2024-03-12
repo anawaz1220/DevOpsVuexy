@@ -132,8 +132,8 @@ watch(configStore.isVerticalNavMini(isVerticalNavHovered), val => {
 
 
 function isAllowed(item){
-  
     if(!!!item.requiredPermission) return true
+    
   else if(Array.isArray(item.requiredPermission))
   return permissions.value?.some(permission=> item.requiredPermission.includes(permission))
 

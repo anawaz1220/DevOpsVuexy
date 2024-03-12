@@ -1,7 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import swal from "sweetalert2";
-import { useRouter } from 'vue-router';
+axios.defaults.baseURL='https://api.dev.efaci-saas.net/api/v1'
 
 const TOKEN_KEY = 'authToken';
 
@@ -50,29 +50,29 @@ export const useLoginStore = defineStore('login', {
       'view_clients',
       'view_unapproved_clients',
       'add_client',
-      'generate_weekly_invoices',
+      // 'generate_weekly_invoices',
       'view_summary',
       
       //  Permissions for materials
       'view_materials',
       'view_materials_rates',
-      'add_material',
+      // 'add_material',
       'add_board_rate',
       'add_client_rate',
 
       //  Permissions for accounts
       'view_accounts',
-      'add_account',
+      // 'add_account',
       'update_account',
 
       //  Permissions for emoloyees
       'view_employees',
-      'add_employee',
+      // 'add_employee',
       'update_employee',
 
       //  Permissions for contacts
-      'view_contacts',
-      'view_unapproved_contacts'
+      // 'view_contacts',
+      // 'view_unapproved_contacts'
     ]
     // permission:[]
   }),
@@ -110,11 +110,11 @@ export const useLoginStore = defineStore('login', {
       // ... your existing registerUser logic ...
     },
     async loginUser(payload) {
-      const router = useRouter();
+      // axios.defaults.baseURL='https://api.dev.efaci-saas.net/api/v1'
       try {
-        const headers = {
-          'content-type': 'application/json',
-        };
+        // const headers = {
+        //   'content-type': 'application/json',
+        // };
         this.userLoading = true;
         const res = await axios.post(`/authentication/sign-in`, payload);
         if (res?.status === 200) {
@@ -147,6 +147,7 @@ export const useLoginStore = defineStore('login', {
         console.error('Error logging out:', err);
       }
     },
+
     async fetchLoggedInUser() {
       await this.initializeToken();
       try {
