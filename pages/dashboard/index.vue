@@ -16,14 +16,14 @@ import WeatherForecast from '@/views/logistics/WeatherForecast.vue';
     </VCol>
     <VCol
       cols="12"
-      md="6"
+      md="7"
     >
       <MaterialWiseTransactions />
     </VCol>
 
     <VCol
       cols="12"
-      md="6"
+      md="5"
     >
       <WeatherForecast />
     </VCol>
